@@ -42,6 +42,11 @@ namespace JabberIRC.IRC.Extensions
             [Description("<nick> :End of WHOIS list")]
             RPL_ENDOFWHOIS = 318,
             RPL_WHOISCHANNELS = 319, // "<nick> :*( ( "@" / "+" ) <channel> " " )"
+            [Description("<nick> <user> <host> * :<real name>")]
+            RPL_WHOWASUSER = 314,
+             
         }
     }
+
+
 }
