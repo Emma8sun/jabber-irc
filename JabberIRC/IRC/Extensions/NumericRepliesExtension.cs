@@ -44,9 +44,35 @@ namespace JabberIRC.IRC.Extensions
             RPL_WHOISCHANNELS = 319, // "<nick> :*( ( "@" / "+" ) <channel> " " )"
             [Description("<nick> <user> <host> * :<real name>")]
             RPL_WHOWASUSER = 314,
-             
+            [Description("<nick> :End of WHOWAS")]
+            RPL_ENDOFWHOWAS = 369,
+            [Description("Obsolete.Not used.")]
+            RPL_LISTSTART = 321,
+            [Description("<channel> <# visible> :<topic>")]
+            RPL_LIST = 322,
+            [Description(":End of LIST")]
+            RPL_LISTEND = 323,
+            [Description("<channel> <nickname>")]
+            RPL_UNIQOPIS = 325,
+            [Description("<channel> <mode> <mode params>")]
+            RPL_CHANNELMODEIS = 324,
+            [Description("<channel> :No topic is set")]
+            RPL_NOTOPIC = 331,
+            [Description("<channel> :<topic>")]
+            RPL_TOPIC = 332,
+            [Description("<channel> <nick>")]
+            RPL_INVITING = 341,
+            [Description("<user> :Summoning user to IRC")]
+            RPL_SUMMONING = 342,
+            [Description("<channel> <invitemask>")]
+            RPL_INVITELIST = 346,
+            [Description("<channel> :End of channel invite list")]
+            RPL_ENDOFINVITELIST = 347,
+            [Description("<channel> <exceptionmask>")]
+            RPL_EXCEPTLIST = 348,
+            [Description("<version>.<debuglevel> <server> :<comments>")]
+            RPL_VERSION = 351,
+            RPL_WHOREPLY = 352, //"<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ("@" / "+")]:<hopcount> <real name>"
         }
     }
-
-
 }
