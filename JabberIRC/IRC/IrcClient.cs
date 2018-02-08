@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
+using JabberIRC.IRC.Commands;
 
 namespace JabberIRC.IRC
 {
@@ -9,35 +10,30 @@ namespace JabberIRC.IRC
     {
         private readonly TcpClient _tcpClient;
         private readonly NetworkStream _stream;
-        private readonly StreamReader _reader;
         private readonly StreamWriter _writer;
-        private readonly ApiWrapper _api;
-        private Thread _thread;
+        private readonly StreamReader _reader;
+        private Thread _writeThread;
+        private Thread _readThread;
 
-        /// <summary>
-        /// Init 
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="port"></param>
-        public IrcClient(string host = "chat.freenode.net", int port = 6667)
+        public IrcClient(string host="chat.freenode.net", int port=6667)
         {
             _tcpClient = new TcpClient(host, port);
             _stream = _tcpClient.GetStream();
-            _reader = new StreamReader(_stream);
             _writer = new StreamWriter(_stream) { NewLine = "\r\n", AutoFlush = true };
-            _api = new ApiWrapper();
+            _reader = new StreamReader(_stream);
         }
 
-        /// <summary>
-        /// Release connections
-        /// </summary>
         ~IrcClient()
         {
             _reader.Close();
             _writer.Close();
             _stream.Close();
             _tcpClient.Close();
-            _thread.Abort();
+        }
+
+        private void Send(string command)
+        {
+            _writer.WriteLine(command);
         }
 
         public void ConnectToServer()
@@ -47,9 +43,12 @@ namespace JabberIRC.IRC
 
         public void JoinChannel(string channel, string nick, string realName, Action<string> callback)
         {
-            _thread = new Thread(() =>
+            _writeThread = new Thread(() =>
             {
-                _api.Join(channel, nick, realName, _reader, _writer);
+                Send(IrcCommand.Nick(nick));
+                Send(IrcCommand.User(nick, "0", realName));
+                Send(IrcCommand.Join(channel));
+
                 string response;
                 while ((response = _reader.ReadLine()) != null)
                 {
@@ -57,8 +56,7 @@ namespace JabberIRC.IRC
                 }
 
             });
-            _thread.Start();
-
+            _writeThread.Start();
         }
 
         public void SendMessage()
